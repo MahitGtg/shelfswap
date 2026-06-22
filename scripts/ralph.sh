@@ -19,6 +19,7 @@ while true; do
   pids=()
   for issue in $ready; do
     slug="$(basename "$issue" .md)"
+    relpath="${issue#"$root"/}"
     tree="$root/../$name-$slug"
     git worktree add "$tree" -b "$slug" >/dev/null
 
@@ -26,7 +27,7 @@ while true; do
       cd "$tree"
       # a fresh subagent, scoped to one issue file. the file says which files
       # to touch and what "done" means, so a clean context is enough.
-      claude -p "/tdd Implement the issue in .scratch/$slug.md in this worktree.
+      claude -p "/tdd Implement the issue in $relpath in this worktree.
                  Write the failing test first, make it pass, verify, then commit.
                  Do not edit the test."
     ) &
