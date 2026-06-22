@@ -1,0 +1,15 @@
+# Python
+api/.venv/
+api/shelfswap.db
+__pycache__/
+*.pyc
+
+# Node
+web/node_modules/
+web/dist/
+
+# Local env files
+.env
+
+# OS / editor
+.DS_Store
