@@ -27,7 +27,7 @@ while true; do
       cd "$tree"
       # a fresh subagent, scoped to one issue file. the file says which files
       # to touch and what "done" means, so a clean context is enough.
-      claude -p "/tdd Implement the issue in $relpath in this worktree.
+      claude -p --dangerously-skip-permissions "/tdd Implement the issue in $relpath in this worktree.
                  Write the failing test first, make it pass, verify, then commit.
                  Do not edit the test."
     ) &
@@ -37,6 +37,9 @@ while true; do
   # wait for this pass before re-reading the tracker
   for pid in "${pids[@]}"; do wait "$pid"; done
 
-  # mark merged issues done, then loop: their dependents become ready next pass.
+  # mark merged issues done, then re-run to pick up unblocked work. Nothing here
+  # updates Status automatically, so don't loop internally — re-running with stale
+  # ready-for-agent issues would just crash trying to recreate existing worktrees.
   echo "Pass complete. Mark merged issues done, re-run to pick up unblocked work."
+  break
 done
