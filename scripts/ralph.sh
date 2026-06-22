@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # scripts/ralph.sh — drain the local .scratch tracker, one fresh /tdd subagent
 # per ready issue. No GitHub: issues are markdown files labelled ready-for-agent.
+# Issue front-matter uses "Status:" (see docs/agents/issue-tracker.md).
 #
 # This is a teaching boilerplate. Off-the-shelf "ralph" skills do the same thing
 # for you. Run it from the repo root once you have issues under .scratch/.
@@ -10,8 +11,8 @@ root="$(git rev-parse --show-toplevel)"
 name="$(basename "$root")"
 
 while true; do
-  # ready issues = .scratch files whose front-matter state is ready-for-agent
-  ready=$(grep -rl "state: ready-for-agent" "$root/.scratch" 2>/dev/null || true)
+  # ready issues = .scratch files whose front-matter Status is ready-for-agent
+  ready=$(grep -rl "Status: ready-for-agent" "$root/.scratch" 2>/dev/null || true)
   [ -z "$ready" ] && { echo "Tracker drained, nothing ready."; break; }
 
   # fan out: one worktree + one subagent per ready issue, all in parallel
